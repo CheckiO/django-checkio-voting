@@ -1,2 +1,4 @@
-django-checkio-rate
+django-checkio-voting
 ===================
+
+based on django-voting
