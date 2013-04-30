@@ -1,7 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-import settings as S
-import register
 
 
 class VoteManager(models.Manager):
@@ -30,6 +28,8 @@ class VoteManager(models.Manager):
         A zero vote indicates that any existing vote should be removed.
         """
         assert  user.is_authenticated()
+        import settings as S
+        import register
 
         try:
             v = self.filter_object(obj).get(user=user)

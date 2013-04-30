@@ -16,6 +16,7 @@ class Vote(models.Model):
     object_id    = models.PositiveIntegerField()
     object       = generic.GenericForeignKey('content_type', 'object_id')
     vote         = models.SmallIntegerField()
+    added_at     = models.DateTimeField(auto_now=True, null=True)
 
     prev_vote = 0 # to know about changing in post_vote and pre_vote signals
 
