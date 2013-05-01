@@ -9,6 +9,7 @@ from voting.models import Vote
 
 pre_vote = Signal(providing_args=['vote'])
 post_vote = Signal(providing_args=['vote'])
+change_vote = Signal(providing_args=['change_vote'])
 
 def pre_vote_send(instance, raw, **kwargs):
     if raw:

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from voting.managers import VoteManager
-
+import voting.signals
 
 
 class Vote(models.Model):
@@ -37,3 +37,12 @@ class Vote(models.Model):
 
     def __unicode__(self):
         return u'%s: %s on %s' % (self.user, self.vote, self.object)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            prev = Vote.objects.get(pk=self.pk)
+            self.prev_vote = prev.vote
+        change_vote = self.vote - self.prev_vote
+        if change_vote:
+            voting.signals.change_vote.send(sender=self, change_vote=change_vote)
+        super(Vote, self).save(*args, **kwargs)
