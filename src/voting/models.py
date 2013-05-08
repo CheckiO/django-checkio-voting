@@ -44,5 +44,5 @@ class Vote(models.Model):
             self.prev_vote = prev.vote
         change_vote = self.vote - self.prev_vote
         if change_vote:
-            voting.signals.change_vote.send(sender=self, change_vote=change_vote)
+            voting.signals.change_vote.send(sender=self.object, vote=self)
         super(Vote, self).save(*args, **kwargs)
