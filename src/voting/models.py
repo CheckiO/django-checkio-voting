@@ -46,3 +46,10 @@ class Vote(models.Model):
         if change_vote:
             voting.signals.change_vote.send(sender=self.object, vote=self)
         super(Vote, self).save(*args, **kwargs)
+
+    def is_upvote(self):
+        return self.vote == 1
+
+    def is_downvote(self):
+        return self.vote == -1
+
