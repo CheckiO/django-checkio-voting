@@ -47,3 +47,10 @@ class Vote(models.Model):
             voting.signals.change_vote.send(sender=self.object, vote=self)
         super(Vote, self).save(*args, **kwargs)
 
+    def is_upvote(self):
+        return self.vote > 0
+
+    def is_downvote(self):
+        return self.vote < 0
+
+
