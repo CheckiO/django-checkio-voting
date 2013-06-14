@@ -6,6 +6,7 @@ from voting.models import Vote
 MODEL_COUNT_ATTRIBUTES = {}
 MODEL_SCORE_ATTRIBUTES = {}
 VALIDATIONS = {}
+PREVALIDATIONS = {}
 
 def recalc_model_count_attribute(vote, **kwargs):
     obj = vote.object
@@ -38,3 +39,14 @@ def validate_vote(vote):
 
     for validation in VALIDATIONS[model]:
         validation(vote)
+
+def add_vote_prevalidation(model, prevalidation):
+    PREVALIDATIONS.setdefault(model,[]).append(prevalidation)
+
+def prevalidate_vote(vote):
+    model = vote.object.__class__
+    if model not in PREVALIDATIONS:
+        return
+
+    for prevalidation in PREVALIDATIONS[model]:
+        prevalidation(vote)

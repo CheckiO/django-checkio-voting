@@ -5,6 +5,7 @@ from django.db import models
 
 from voting.managers import VoteManager
 import voting.signals
+from voting.exceptions import VoteValidationError
 
 
 class Vote(models.Model):
@@ -53,4 +54,23 @@ class Vote(models.Model):
     def is_downvote(self):
         return self.vote < 0
 
+    @classmethod
+    def get_valid_votes(cls, obj, user):
+        """
+        Get list of the valid votes for the given obect by the given user.
+        """
+        import voting.settings as S
+        import voting.register as R
+        content_type = ContentType.objects.get_for_model(obj.__class__)
+        vote = Vote(user=user, content_type=content_type, object_id=obj.id)
+        valid = []
+        for value in range(S.MIN_VOTE_COUNT, S.MAX_VOTE_COUNT+1):
+            vote.vote = value
+            try:
+                R.prevalidate_vote(vote)
+            except VoteValidationError:
+                continue
+            else:
+                valid.append(value)
+        return valid
 
