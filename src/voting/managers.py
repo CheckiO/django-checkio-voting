@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from exceptions import VoteValidationError
 
 
 class VoteManager(models.Manager):
@@ -43,11 +44,14 @@ class VoteManager(models.Manager):
                 object_id=obj._get_pk_val(), vote=vote)
 
         S.LAMBDA_VALID_VOTE(v)
+
         register.validate_vote(v)
+
+        if v.vote not in register.votes_range(v):
+            raise VoteValidationError, 'Wrong request. The vote is not in the acceptable range.'
+
         v.save()
         return v
-            
-
 
 
     def get_for_user(self, obj, user):

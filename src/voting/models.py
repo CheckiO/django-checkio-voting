@@ -55,22 +55,13 @@ class Vote(models.Model):
         return self.vote < 0
 
     @classmethod
-    def get_valid_votes(cls, obj, user):
+    def get_votes_range(cls, obj, user):
         """
-        Get list of the valid votes for the given obect by the given user.
+        Get votes range for the given obect by the given user.
         """
-        import voting.settings as S
         import voting.register as R
         content_type = ContentType.objects.get_for_model(obj.__class__)
         vote = Vote(user=user, content_type=content_type, object_id=obj.id)
-        valid = []
-        for value in range(S.MIN_VOTE_COUNT, S.MAX_VOTE_COUNT+1):
-            vote.vote = value
-            try:
-                R.prevalidate_vote(vote)
-            except VoteValidationError:
-                continue
-            else:
-                valid.append(value)
-        return valid
+        return R.votes_range(vote)
+
 

@@ -6,7 +6,7 @@ from voting.models import Vote
 MODEL_COUNT_ATTRIBUTES = {}
 MODEL_SCORE_ATTRIBUTES = {}
 VALIDATIONS = {}
-PREVALIDATIONS = {}
+RANGES = {}
 
 def recalc_model_count_attribute(vote, **kwargs):
     obj = vote.object
@@ -40,13 +40,15 @@ def validate_vote(vote):
     for validation in VALIDATIONS[model]:
         validation(vote)
 
-def add_vote_prevalidation(model, prevalidation):
-    PREVALIDATIONS.setdefault(model,[]).append(prevalidation)
+def add_votes_range(model, range):
+    RANGES.setdefault(model,[]).append(range)
 
-def prevalidate_vote(vote):
+def votes_range(vote):
+    import voting.settings as S
     model = vote.object.__class__
-    if model not in PREVALIDATIONS:
-        return
-
-    for prevalidation in PREVALIDATIONS[model]:
-        prevalidation(vote)
+    if model not in RANGES:
+        return range(S.MIN_VOTE_COUNT, S.MAX_VOTE_COUNT+1)
+    _range = set(RANGES[model][0](vote))
+    for r in RANGES[model][1:]:
+        _range &= set(r(vote))
+    return sorted(list(_range))
