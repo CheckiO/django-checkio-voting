@@ -43,12 +43,12 @@ def validate_vote(vote):
 def add_votes_range(model, range):
     RANGES.setdefault(model,[]).append(range)
 
-def votes_range(vote):
+def votes_range(obj, user):
     import voting.settings as S
-    model = vote.object.__class__
+    model = obj.__class__
     if model not in RANGES:
         return range(S.MIN_VOTE_COUNT, S.MAX_VOTE_COUNT+1)
-    _range = set(RANGES[model][0](vote))
+    _range = set(RANGES[model][0](obj, user))
     for r in RANGES[model][1:]:
-        _range &= set(r(vote))
+        _range &= set(r(obj, user))
     return sorted(list(_range))

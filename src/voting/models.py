@@ -57,11 +57,9 @@ class Vote(models.Model):
     @classmethod
     def get_votes_range(cls, obj, user):
         """
-        Get votes range for the given obect by the given user.
+        Get votes range for the given object by the given user.
         """
         import voting.register as R
-        content_type = ContentType.objects.get_for_model(obj.__class__)
-        vote = Vote(user=user, content_type=content_type, object_id=obj.id)
-        return R.votes_range(vote)
+        return R.votes_range(obj, user)
 
 
