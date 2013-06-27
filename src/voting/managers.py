@@ -45,10 +45,10 @@ class VoteManager(models.Manager):
 
         S.LAMBDA_VALID_VOTE(v)
 
-        register.validate_vote(v)
+        if v.vote not in register.votes_range(v.object, v.user):
+            raise VoteValidationError, 'Vote out of range'
 
-        if v.vote not in register.votes_range(v):
-            raise VoteValidationError, 'Wrong request. The vote is not in the acceptable range.'
+        register.validate_vote(v)
 
         v.save()
         return v
