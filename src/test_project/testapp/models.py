@@ -26,13 +26,14 @@ class Shelf(models.Model):
 class StrictlyComment(models.Model):
     author = models.ForeignKey('auth.user')
     text = models.TextField()
-    tvs = VotingScoreField(validate_obj='voting_validate')
+    tvs = VotingScoreField(validate_obj='voting_validate', range_obj='votes_range')
 
     def voting_validate(self, vote):
         if vote.object.author == vote.user:
             raise VoteValidationError, "Author can't for his comment"
 
-
+    def votes_range(self, user):
+        return [-1,0,1]
 
 from voting import register
 

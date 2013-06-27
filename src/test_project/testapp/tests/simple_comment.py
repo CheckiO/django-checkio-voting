@@ -48,10 +48,10 @@ class SimpleCommentTestBaseErrors(BaseTestCase):
             VOTING_LAMBDA_VALID_VOTE, VOTING_MAX_VOTE_COUNT, VOTING_MIN_VOTE_COUNT - details in voting.settings
         '''
 
-        self.assertEqualGetResponseJson('/vote/testapp/comment/1/up/2/',
+        self.assertEqualGetResponseJson('/vote/testapp/comment/1/up/3/',
             {u'error_message': u'Wrong request. Vote is too high.', u'success': False})
 
-        self.assertEqualGetResponseJson('/vote/testapp/comment/1/down/2/',
+        self.assertEqualGetResponseJson('/vote/testapp/comment/1/down/3/',
             {u'error_message': u'Wrong request. Vote is too low.', u'success': False})
 
     def check_author(vote):
@@ -67,7 +67,7 @@ class SimpleCommentTestBaseErrors(BaseTestCase):
         self.assertEqualGetResponseJson('/vote/testapp/comment/1/up/',
             {u'error_message': u"Author can't vote for itself", u'success': False})
 
-        self.assertEqualGetResponseJson('/vote/testapp/comment/1/up/2/',
+        self.assertEqualGetResponseJson('/vote/testapp/comment/1/up/3/',
             {u'error_message': u'Wrong request. Vote is too high.', u'success': False})
 
 
@@ -144,7 +144,7 @@ class SimpleCommentTestDirect(BaseTestCase):
         self.client.get('/vote/direct/unknownapp/comment/1/up/')
         self.assertEqual(self.mock_error.call_args[0][1], 'Wrong request. Model.')
 
-        self.client.get('/vote/direct/testapp/comment/1/up/2/')
+        self.client.get('/vote/direct/testapp/comment/1/up/3/')
         self.assertEqual(self.mock_error.call_args[0][1], 'Wrong request. Vote is too high.')
 
     def test_successful(self):
