@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from exceptions import VoteValidationError
 
 
 class VoteManager(models.Manager):
@@ -43,11 +44,14 @@ class VoteManager(models.Manager):
                 object_id=obj._get_pk_val(), vote=vote)
 
         S.LAMBDA_VALID_VOTE(v)
+
+        if v.vote not in register.votes_range(v.object, v.user):
+            raise VoteValidationError, 'Vote out of range'
+
         register.validate_vote(v)
+
         v.save()
         return v
-            
-
 
 
     def get_for_user(self, obj, user):
