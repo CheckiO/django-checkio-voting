@@ -1,9 +1,9 @@
+import json
 
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
-from django.http import  HttpResponse, HttpResponseRedirect
-from django.utils import simplejson
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from voting.exceptions import VoteValidationError
 
@@ -85,7 +85,7 @@ class AjaxJsonVoteView(BaseVoteView):
     """
 
     def response_json(self,data):
-        return HttpResponse(simplejson.dumps(data, cls=DjangoJSONEncoder),
+        return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder),
             mimetype='application/json')
 
     def response_error(self, error_message):
