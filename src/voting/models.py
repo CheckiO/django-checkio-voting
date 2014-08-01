@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from voting.managers import VoteManager
-import voting.signals
 from voting.exceptions import VoteValidationError
 
 
@@ -62,4 +61,4 @@ class Vote(models.Model):
         import voting.register as R
         return R.votes_range(obj, user)
 
-
+import voting.signals

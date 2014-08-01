@@ -27,6 +27,9 @@ class VotingScoreField(CalcField):
         super(VotingScoreField,self).contribute_to_class(cls,name)
         register.set_model_score_attribute(cls, name)
 
-from south.modelsinspector import add_introspection_rules
-
-add_introspection_rules([], ["^voting\.fields\.VotingCountField", "^voting\.fields\.VotingScoreField"])
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^voting\.fields\.VotingCountField", "^voting\.fields\.VotingScoreField"])
